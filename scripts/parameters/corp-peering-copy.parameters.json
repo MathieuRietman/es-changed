@@ -8,11 +8,11 @@
         "corpConnectedLzSubscriptionId": {
             "value": [
                 {
-                    "subs":"ea596fd4-69f7-4abe-9bb6-fe1700510a19", 
+                    "subs":"xxxxx-69x-xxx-9bb6-xxxxxxxxx", 
                     "addresses": "10.200.0.0/16"
                 },
                 {
-                    "subs":"e558ee23-0fa1-4d0a-8f5e-5e0688cf0f30", 
+                    "subs":"xxxxx-69x-xxx-9bsb6-xxxxxxxxx", 
                     "addresses": "10.300.0.0/16"
                 }   
             ]
