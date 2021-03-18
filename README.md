@@ -78,6 +78,17 @@ Change
 
 In armTemplates\auxiliary\logAnalyticsSolutions.json
 
+Change Parmeter in right naming
+```json
+  "workspaceName": {
+            "type": "string",
+            "defaultValue": "[concat('la-', parameters('topLevelManagementGroupPrefix'), '-prod-we')]",
+            "metadata": {
+                "description": "Provide resource name for the Log Analytics workspace. When deployed using ES RI, this name it provided deterministically based on ESLZ prefix."
+            }
+        },
+```
+
 Change
 ```json
     "variables": {

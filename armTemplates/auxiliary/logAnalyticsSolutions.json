@@ -17,7 +17,7 @@
         },
         "workspaceName": {
             "type": "string",
-            "defaultValue": "[concat(parameters('topLevelManagementGroupPrefix'), '-la-', parameters('managementSubscriptionId'))]",
+            "defaultValue": "[concat('la-', parameters('topLevelManagementGroupPrefix'), '-prod-we')]",
             "metadata": {
                 "description": "Provide resource name for the Log Analytics workspace. When deployed using ES RI, this name it provided deterministically based on ESLZ prefix."
             }
