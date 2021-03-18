@@ -1,0 +1,69 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "topLevelManagementGroupPrefix": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "managementSubscriptionId": {
+            "value": ""
+        },
+        "enableLogAnalytics": {
+            "value": "Yes"
+        },
+        "enableAsc": {
+            "value": "Yes"
+        },
+        "enableAscForServers": {
+            "value": "Free"
+        },
+        "enableAscForAppServices": {
+            "value": "Free"
+        },
+        "enableAscForStorage": {
+            "value": "Free"
+        },
+        "enableAscForSql": {
+            "value": "Free"
+        },
+        "enableAscForKeyVault": {
+            "value": "Free"
+        },
+        "enableAscForArm": {
+            "value": "Free"
+        },
+        "enableAscForDns": {
+            "value": "Free"
+        },
+        "enableAscForKubernetes": {
+            "value": "Free"
+        },
+        "enableAscForRegistries": {
+            "value": "Free"
+        },
+        "enableArcMonitoring": {
+            "value": "Yes"
+        },
+        "enableVmMonitoring": {
+            "value": "Yes"
+        },
+        "enableVmssMonitoring": {
+            "value": "Yes"
+        },
+        "onlineLzSubscriptionId": {
+            "value": []
+        },
+        "corpLzSubscriptionId": {
+            "value": []
+        },
+        "corpConnectedLzSubscriptionId": {
+            "value": []
+        },
+        "identitySubscriptionId": {
+            "value": ""
+        },
+        "connectivitySubscriptionId": {
+            "value": ""
+        }
+    }
+}

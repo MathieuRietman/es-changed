@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "topLevelManagementGroupPrefix": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "managementSubscriptionId": {
+            "value": ""
+        },
+        "workspaceName": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "workspaceRegion": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "enableSecuritySolution": {
+            "value": "Yes"
+        },
+        "enableAgentHealth": {
+            "value": "Yes"
+        },
+        "enableChangeTracking": {
+            "value": "Yes"
+        },
+        "enableUpdateMgmt": {
+            "value": "Yes"
+        },
+        "enableActivityLog": {
+            "value": "Yes"
+        },
+        "enableAntiMalware": {
+            "value": "Yes"
+        },
+        "enableVmInsights": {
+            "value": "Yes"
+        },
+        "enableServiceMap": {
+            "value": "Yes"
+        },
+        "enableSqlAssessment": {
+            "value": "Yes"
+        }
+    }
+}

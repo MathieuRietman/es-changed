@@ -17,7 +17,7 @@
         },
         "workspaceName": {
             "type": "string",
-            "defaultValue": "[concat('la-', parameters('topLevelManagementGroupPrefix'), '-prod-we')]",
+            "defaultValue": "[concat('la-', parameters('topLevelManagementGroupPrefix'), '-prod-we')]", //change this
             "metadata": {
                 "description": "Provide resource name for the Log Analytics workspace. When deployed using ES RI, this name it provided deterministically based on ESLZ prefix."
             }
@@ -130,7 +130,7 @@
         }
     },
     "variables": {
-        "laResourceId": "[toLower(concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', parameters('topLevelManagementGroupPrefix'), '-mgmt', '/providers/Microsoft.OperationalInsights/workspaces/', 'la-', parameters('topLevelManagementGroupPrefix'), '-prod-we'))]",
+        "laResourceId": "[toLower(concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', 'rg-', parameters('topLevelManagementGroupPrefix'), '-mgmt-prod-central', '/providers/Microsoft.OperationalInsights/workspaces/', 'la-', parameters('topLevelManagementGroupPrefix'), '-prod-we'))]", //change this
         "solutions": {
             "security": {
                 "name": "[concat('Security', '(', parameters('workspaceName'), ')')]",
@@ -179,8 +179,8 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
             "name": "[take(concat('EntScale-', 'solutions-', guid(deployment().name)), 63)]",
-            "resourceGroup": "[concat(parameters('topLevelManagementGroupPrefix'), '-mgmt')]",
-            "properties": {
+            "resourceGroup": "[concat('rg-', parameters('topLevelManagementGroupPrefix'), '-mgmt-prod-central')]", //change this
+              "properties": {
                 "mode": "Incremental",
                 "template": {
                     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",

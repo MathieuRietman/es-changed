@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "topLevelManagementGroupPrefix": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "enableSqlAudit": {
+            "value": "Yes"
+        },
+        "enableAksPolicy": {
+            "value": "Yes"
+        },
+        "denyAksPrivileged": {
+            "value": "Yes"
+        },
+        "denyAksPrivilegedEscalation": {
+            "value": "Yes"
+        },
+        "denyHttpIngressForAks": {
+            "value": "Yes"
+        },
+        "enableSqlEncryption": {
+            "value": "Yes"
+        },
+        "enableVmBackup": {
+            "value": "Yes"
+        },
+        "denyRdp": {
+            "value": "Yes"
+        },
+        "enableStorageHttps": {
+            "value": "Yes"
+        },
+        "denyIpForwarding": {
+            "value": "Yes"
+        },
+        "denySubnetWithoutNsg": {
+            "value": "Yes"
+        }
+    }
+}

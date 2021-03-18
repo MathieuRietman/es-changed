@@ -77,7 +77,7 @@
                         "value": "[deployment().location]"
                     },
                     "rgName": {
-                        "value": "[concat(parameters('topLevelManagementGroupPrefix'), '-mgmt')]"
+                        "value": "[concat('rg-', parameters('topLevelManagementGroupPrefix'), '-mgmt-prod-central')]" // change this
                     },
                     "retentionInDays": {
                         "value": "[parameters('retentionInDays')]"

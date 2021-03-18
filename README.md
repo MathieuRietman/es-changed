@@ -1,19 +1,37 @@
-# Change required
+# Example to change naming convention in Enterprise scale 
+<br>
 
-Edit button below to point to your repository use encode selection string to url change and then convert selection back to URL encoding
-Need to be public as this uses gui. 
+The enterprise scale sample reference implementation [https://github.com/Azure/Enterprise-Scale](https://github.com/Azure/Enterprise-Scale) has a fixed naming convention and sometimes there is a wish to change this naming convention. 
+<br>
+
+This repository give an example how to accomplish this, we encourage always use infrastructure as code and also consider to adopt [azops](https://github.com/Azure/Enterprise-Scale/blob/main/docs/Deploy/getting-started.md).
+As the reference implementation is kept up to date the knowledge and configuration is a good place to start and give you already xx% of governance set by policies and as so always interesting to take this as a starting point.
+<br>
+
+The repository document two approaches but there are always other approaches :
+1. Change the templates and deploy via GUI as the reference implementation is working. 
+<br>This require that your code is public as the deployment is via portal and the templates must be public accessible. Also the used parameters are then not part of your infrastructure as code.
+2. Change the templates and deploy with parameter files that are then possible integrated with pipelines.
+<br>Parameters can then be part of your code or variables in your pipeline.
+
+There are always two steps 
+
+1. Copy latest sources and modify the source to adopt your naming convention.
+2. Deploy it either by modifing the GUI deployment button or via the deployment scripts with parameters files. See sample.
+
+<br>
+<br>
+
+# Step 1 Modify the sources to adopt your naming convention
+<br>
+
+* Take latest code from your reference implementation https://github.com/Azure/Enterprise-Scale/tree/main/docs/reference
+<br> In this repository a select the files under adventure works.
 
 
-| Enterprise-Scale Design Principles | ARM Template | Scale without refactoring |
-|:-------------|:--------------|:--------------|
-|![Best Practice Check](https://azurequickstartsservice.blob.core.windows.net/badges/subscription-deployments/create-rg-lock-role-assignment/BestPracticeResult.svg)| [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMathieuRietman%2Fes-changed%2Fmaster%2FarmTemplates%2Fes-hubspoke.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FMathieuRietman%2Fes-changed%2Fmaster%2FarmTemplates%2Fportal-es-hubspoke.json)  | Yes |
-
-
-Take latest code from your reference implementation https://github.com/Azure/Enterprise-Scale/tree/main/docs/reference
-
-
-Change management group structure 
-
+Edit then the files in armTemplates\auxiliary\ below you see an example of edited files.
+### Step Change management group structure 
+<br>
 in file armTemplates\auxiliary\mgmtGroups.json
 
 ```json
@@ -62,27 +80,48 @@ If required change move action in es-hubspoke.json
 ```
 
 
-Changing Workspace names. 
+### Step Changing Workspace names and resourcegroup. 
 
 In armTemplates\auxiliary\logAnalytics.json
 
 Change
 ```json
+   "parameters": {
                     "workspaceName": {
-                        "value": "[concat('la-',parameters('topLevelManagementGroupPrefix'),'-prod-we')]"
+                        "value": "[concat('la-',parameters('topLevelManagementGroupPrefix'),'-prod-we')]"  // change this
                     },
                     "automationAccountName": {
-                        "value": "[concat('aa-',parameters('topLevelManagementGroupPrefix'), '-prod-we')]"
+                        "value": "[concat('aa-',parameters('topLevelManagementGroupPrefix'), '-prod-we')]" // change this
                     },
+                    "workspaceRegion": {
+                        "value": "[deployment().location]"
+                    },
+                    "automationRegion": {
+                        "value": "[deployment().location]"
+                    },
+                    "rgName": {
+                        "value": "[concat('rg-', parameters('topLevelManagementGroupPrefix'), '-mgmt-prod-central')]"   // change this
+                    },
+                    "retentionInDays": {
+                        "value": "[parameters('retentionInDays')]"
+                    }
 ```
 
 In armTemplates\auxiliary\logAnalyticsSolutions.json
+```json
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "[take(concat('EntScale-', 'solutions-', guid(deployment().name)), 63)]",
+            "resourceGroup": "[concat('rg-', parameters('topLevelManagementGroupPrefix'), '-mgmt-prod-central')]",  //change this
+```
 
 Change Parmeter in right naming
 ```json
   "workspaceName": {
             "type": "string",
-            "defaultValue": "[concat('la-', parameters('topLevelManagementGroupPrefix'), '-prod-we')]",
+            "defaultValue": "[concat('la-', parameters('topLevelManagementGroupPrefix'), '-prod-we')]",  //change this
             "metadata": {
                 "description": "Provide resource name for the Log Analytics workspace. When deployed using ES RI, this name it provided deterministically based on ESLZ prefix."
             }
@@ -91,8 +130,10 @@ Change Parmeter in right naming
 
 Change
 ```json
-    "variables": {
-        "laResourceId": "[toLower(concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', parameters('topLevelManagementGroupPrefix'), '-mgmt', '/providers/Microsoft.OperationalInsights/workspaces/', 'la-', parameters('topLevelManagementGroupPrefix'), '-prod-we'))]",
+   "variables": {
+        "laResourceId": "[toLower(concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', 'rg-', parameters('topLevelManagementGroupPrefix'), '-mgmt-prod-central', '/providers/Microsoft.OperationalInsights/workspaces/', 'la-', parameters('topLevelManagementGroupPrefix'), '-prod-we'))]", //change this
+
+
 ```
 
 
@@ -102,27 +143,27 @@ Change 7 time
     "parameters": {
                     "logAnalytics": {
                         
-                        "value":"[toLower(concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', parameters('topLevelManagementGroupPrefix'), '-mgmt', '/providers/Microsoft.OperationalInsights/workspaces/', 'la-', parameters('topLevelManagementGroupPrefix'), '-prod-we'))]",
+                        "value":"[toLower(concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/','rg-', parameters('topLevelManagementGroupPrefix'), '-mgmt-prod-central', '/providers/Microsoft.OperationalInsights/workspaces/', 'la-', parameters('topLevelManagementGroupPrefix'), '-prod-we'))]",  //change this
                     },
 ```
 
 
-For network change 
+## Step For network naming convention changes 
 
 In armTemplates\auxiliary\hubspoke-connectivity.json
 Change
 ```json
     "variables": {
-        "vpngwname": "[concat('vpngw-',parameters('topLevelManagementGroupPrefix'), '-prod-we')]",
-        "erGwName": "[concat('ergw-',parameters('topLevelManagementGroupPrefix'), '-prod-we')]",
-        "rgName": "[concat('rg-',parameters('topLevelManagementGroupPrefix'), '-connectivity-prod-we')]",
-        "hubName": "[concat('vnet-',parameters('topLevelManagementGroupPrefix'), 'hub-prod-we')]",
-        "azVpnGwIpName": "[concat('pip-',variables('vpngwname'))]",
+        "vpngwname": "[concat('vpngw-',parameters('topLevelManagementGroupPrefix'), '-prod-we')]",    //change this
+        "erGwName": "[concat('ergw-',parameters('topLevelManagementGroupPrefix'), '-prod-we')]",   //change this
+        "rgName": "[concat('rg-',parameters('topLevelManagementGroupPrefix'), '-connectivity-prod-we')]",   //change this
+        "hubName": "[concat('vnet-',parameters('topLevelManagementGroupPrefix'), 'hub-prod-we')]",   //change this
+        "azVpnGwIpName": "[concat('pip-',variables('vpngwname'))]",  //change this
         "azVpnGwSubnetId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'),'/providers/Microsoft.Network/virtualNetworks/', variables('hubname'), '/subnets/GatewaySubnet')]",
-        "azFwName": "[concat(parameters('topLevelManagementGroupPrefix'), '-fw-', parameters('location'))]",
-        "azErGwIpName": "[concat('pip', variables('erGwName'))]",
+        "azFwName": "[concat('fw-', parameters('topLevelManagementGroupPrefix'), '-prod-we')]",  //change this
+        "azErGwIpName": "[concat('pip-', variables('erGwName'))]", //change this
         "azVpnGwPipId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'), '/providers/Microsoft.Network/publicIPAddresses/', variables('azVpnGwIpName'))]",
-        "azFwIpName": "[concat('pip',variables('azFwName'))]",
+        "azFwIpName": "[concat('pip-',variables('azFwName'))]", //change this
         "azErGwSubnetId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'),'/providers/Microsoft.Network/virtualNetworks/', variables('hubname'), '/subnets/GatewaySubnet')]",
         "azErGwPipId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'), '/providers/Microsoft.Network/publicIPAddresses/', variables('azErGwIpName'))]",
         "azFwSubnetId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'),'/providers/Microsoft.Network/virtualNetworks/', variables('hubname'), '/subnets/AzureFirewallSubnet')]",
@@ -134,43 +175,79 @@ In armTemplates\auxiliary\corp-policy-peering.json
 
 Change
 ```json
- "variables": {
-        "hubResourceId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', 'rg-',parameters('topLevelManagementGroupPrefix'), '-connectivity-prod-we', '-connectivity', '/providers/Microsoft.Network/virtualNetworks/', 'vnet-',parameters('topLevelManagementGroupPrefix'), 'hub-prod-we')]",
-        "rbacNameForLz": "[guid(subscription().id)]",
+  "variables": {
+        "hubResourceId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', 'rg-',parameters('topLevelManagementGroupPrefix'), '-connectivity-prod-we', '/providers/Microsoft.Network/virtualNetworks/', 'vnet-',parameters('topLevelManagementGroupPrefix'), 'hub-prod-we')]",  //change this
+  
 ```     
 
 
+<br>
+<br>
+<br>
+
+# 2 Deploy via deployment script with parameters.
 
 
-# Deploy Enterprise-Scale with hub and spoke architecture standard docs
+In the folder scrips [Scripts](./scripts) there are scripts created for every deployment with in [Parameters](./scripts/parameters) also the parameters that else are specified by the GUI.
 
-The Enterprise-Scale architecture is modular by design and allow organizations to start with foundational landing zones that support their application portfolios and add hybrid connectivity with ExpressRoute or VPN when required. Alternatively, organizations can start with an Enterprise-Scale architecture based on the traditional hub and spoke network topology if customers require hybrid connectivity to on-premises locations from the begining.
+```ps1
+# Management Groups
+.\step1DeployMgmtGroups.ps1 -topLevelManagementGroupPrefix $topLevelManagementGroupPrefix  -Location  $Location
+# Custom Policies deployment to the top level management group
+.\step2DeployPolicies.ps1 -topLevelManagementGroupPrefix $topLevelManagementGroupPrefix  -Location  $Location
+# Log Analytics Automation Account policy assignment and deploy
+.\step3DeployLogAnalytics.ps1 -topLevelManagementGroupPrefix $topLevelManagementGroupPrefix  -Location  $Location -managementSubscriptionId $managementSubscriptionId 
+# Deploy Log Analytics Solutions
+.\step4DeployLogAnalyticsSolutions.ps1 -topLevelManagementGroupPrefix $topLevelManagementGroupPrefix  -Location  $Location -managementSubscriptionId $managementSubscriptionId 
+# Identity policies assignment
+.\step5DeployIdentity.ps1 -topLevelManagementGroupPrefix  $topLevelManagementGroupPrefix  -Location  $Location
+# LandingZone policies assignment
+.\step6DeployLz.ps1  -topLevelManagementGroupPrefix  $topLevelManagementGroupPrefix  -Location  $Location
+# TopLevel Diagnostic and security policies assignment
+.\step7DeploydiagnosticsAndSecurity.ps1 -topLevelManagementGroupPrefix $topLevelManagementGroupPrefix  -Location  $Location -managementSubscriptionId $managementSubscriptionId 
+# Deploy Connectivity FW, VPNGW
+.\step8Deployhubspoke-connectivity.ps1 -topLevelManagementGroupPrefix $topLevelManagementGroupPrefix  -Location  $Location -connectivitySubscriptionId $connectivitySubscriptionId
+# Sample of SPoke vNet policy assignment and deploy
+.\step9DeployCorp-policy-peering.ps1 -topLevelManagementGroupPrefix $topLevelManagementGroupPrefix  -Location  $Location -connectivitySubscriptionId $connectivitySubscriptionId -CorpSubscriptionId $CorpSubscriptionId  
+```	   
 
-This reference implementation also allows the deployment of platform services across Availability Zones (such as VPN or ExpressRoute gateways) to increase availability uptime of such services. 
 
-## Customer profile
+# 3 Deploy via Azure Portal GUI. Modify the deploy button to deploy via a public Git Hub.
 
-This reference implementation is ideal for customers that have started their Enterprise-Scale journey with an Enterprise-Scale foundation implementation and then there is a need to add connectivity on-premises datacenters and branch offices by using a traditional hub and spoke network architecture. This reference implementation is also well suited for customers who want to start with Landing Zones for their net new
-deployment/development in Azure by implementing a network architecture based on the traditional hub and spoke network topology.
+Edit button below to point to your repository use encode selection string to url change and then convert selection back to URL encoding.
 
-## How to evolve from Enterprise-Scale foundation
 
-If customer started with a Enterprise-Scale foundation deployment, and if the business requirements changes over time, such as migration of on-premise applications to Azure that requires hybrid connectivity, you will simply create the **Connectivity** Subscription, place it into the **Platform > Connectivity** Management Group and assign Azure Policy for the hub and spoke network topology.
+This needs that your repository need to be public assessable, and that your parameters and choices you choose are not part of the code.
 
-## Pre-requisites
+edit https%3A%2F%2Fraw.githubusercontent.com%2FMathieuRietman%2Fes-changed%2Fmaster%2FarmTemplates%2Fes-hubspoke.json and https%3A%2F%2Fraw.githubusercontent.com%2FMathieuRietman%2Fes-changed%2Fmaster%2FarmTemplates%2Fportal-es-hubspoke.json that should point to your repository.
 
-To deploy this ARM template, your user/service principal must have Owner permission at the Tenant root.
-See the following [instructions](https://docs.microsoft.com/en-us/azure/role-based-access-control/elevate-access-global-admin) on how to grant access.
+Commit changes and use button in github.
 
-### Optional prerequisites
+| Enterprise-Scale Design Principles                                                                                                                                  | ARM Template                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Scale without refactoring |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------ |
+| ![Best Practice Check](https://azurequickstartsservice.blob.core.windows.net/badges/subscription-deployments/create-rg-lock-role-assignment/BestPracticeResult.svg) | [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMathieuRietman%2Fes-changed%2Fmaster%2FarmTemplates%2Fes-hubspoke.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FMathieuRietman%2Fes-changed%2Fmaster%2FarmTemplates%2Fportal-es-hubspoke.json) | Yes                       |
 
-The deployment experience in Azure portal allows you to bring in existing (preferably empty) subscriptions dedicated for platform management, connectivity and identity. It also allows you to bring existing subscriptions that can be used as the initial landing zones for your applications.
+<br>
+<br>
 
-To learn how to create new subscriptions programatically, please visit this [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/programmatically-create-subscription?tabs=rest).
 
-To learn how to create new subscriptions using Azure portal, please visit this [link](https://azure.microsoft.com/en-us/blog/create-enterprise-subscription-experience-in-azure-portal-public-preview/).
 
-## What will be deployed?
+
+<br>
+<br>
+<br>
+
+<br>
+<br>
+<br>
+
+## Reference 
+
+This Sample is the Enterprise Landing Zone reference implementation of adventure works copied on 17 March 2021
+
+<br>
+
+### What will be deployed?
 
 By default, all recommendations are enabled and you must explicitly disable them if you don't want it to be deployed and configured.
 
@@ -208,11 +285,3 @@ By default, all recommendations are enabled and you must explicitly disable them
   - Ensure subnets are associated with NSG
 
 ![Enterprise-Scale with connectivity](./media/es-hubspoke.png)
-
-## Next steps
-
-### From an application perspective:
-
-Once you have deployed the reference implementation, you can create new subscriptions, or move an existing subscriptions to the **Landing Zones** > **Online** or **Corp**  management group, and finally assign RBAC to the groups/users who should use the landing zones (subscriptions) so they can start deploying their workloads.
-
-Refer to the [Create Landing Zone(s)](../../EnterpriseScale-Deploy-landing-zones.md) article for guidance to create Landing Zones.

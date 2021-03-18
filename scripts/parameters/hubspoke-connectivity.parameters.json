@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "topLevelManagementGroupPrefix": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "addressPrefix": {
+            "value": "10.100.0.0/20" // TODO: Fill in parameter value
+        },
+        "enableHub": {
+            "value": "Yes"
+        },
+        "enableAzFw": {
+            "value": "Yes"
+        },
+        "enableVpnGw": {
+            "value": "Yes"
+        },
+        "enableErGw": {
+            "value": "No"
+        },
+        "connectivitySubscriptionId": {
+            "value": ""
+        },
+        "vpnGwType": {
+            "value": "RouteBased"
+        },
+        "subnetMaskForAzFw": {
+            "value": "10.100.0.0/24"
+        },
+        "subnetMaskForGw": {
+            "value": "10.100.1.0/24"
+        },
+        "vpnOrErZones": {
+            "value": [
+                "1"
+            ]
+        },
+        "firewallZones": {
+            "value": [ 
+                "1"
+            ]
+        }
+    }
+}

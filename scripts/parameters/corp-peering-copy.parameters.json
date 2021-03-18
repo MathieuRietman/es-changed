@@ -1,0 +1,26 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "topLevelManagementGroupPrefix": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "corpConnectedLzSubscriptionId": {
+            "value": [
+                {
+                    "subs":"ea596fd4-69f7-4abe-9bb6-fe1700510a19", 
+                    "addresses": "10.200.0.0/16"
+                },
+                {
+                    "subs":"e558ee23-0fa1-4d0a-8f5e-5e0688cf0f30", 
+                    "addresses": "10.300.0.0/16"
+                }   
+            ]
+        },
+        "connectivitySubscriptionId": {
+            "value": "" // TODO: Fill in parameter value
+        }
+
+    
+    }
+}

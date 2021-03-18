@@ -109,17 +109,17 @@
             "defaultValue": []
         }
     },
-    "variables": {
-        "vpngwname": "[concat('vpngw-',parameters('topLevelManagementGroupPrefix'), '-prod-we')]",
-        "erGwName": "[concat('ergw-',parameters('topLevelManagementGroupPrefix'), '-prod-we')]",
-        "rgName": "[concat('rg-',parameters('topLevelManagementGroupPrefix'), '-connectivity-prod-we')]",
-        "hubName": "[concat('vnet-',parameters('topLevelManagementGroupPrefix'), 'hub-prod-we')]",
-        "azVpnGwIpName": "[concat('pip-',variables('vpngwname'))]",
+  "variables": {
+        "vpngwname": "[concat('vpngw-',parameters('topLevelManagementGroupPrefix'), '-prod-we')]",    //change this
+        "erGwName": "[concat('ergw-',parameters('topLevelManagementGroupPrefix'), '-prod-we')]",   //change this
+        "rgName": "[concat('rg-',parameters('topLevelManagementGroupPrefix'), '-connectivity-prod-we')]",   //change this
+        "hubName": "[concat('vnet-',parameters('topLevelManagementGroupPrefix'), 'hub-prod-we')]",   //change this
+        "azVpnGwIpName": "[concat('pip-',variables('vpngwname'))]",  //change this
         "azVpnGwSubnetId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'),'/providers/Microsoft.Network/virtualNetworks/', variables('hubname'), '/subnets/GatewaySubnet')]",
-        "azFwName": "[concat(parameters('topLevelManagementGroupPrefix'), '-fw-', parameters('location'))]",
-        "azErGwIpName": "[concat('pip', variables('erGwName'))]",
+        "azFwName": "[concat('fw-', parameters('topLevelManagementGroupPrefix'), '-prod-we')]",  //change this
+        "azErGwIpName": "[concat('pip-', variables('erGwName'))]", //change this
         "azVpnGwPipId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'), '/providers/Microsoft.Network/publicIPAddresses/', variables('azVpnGwIpName'))]",
-        "azFwIpName": "[concat('pip',variables('azFwName'))]",
+        "azFwIpName": "[concat('pip-',variables('azFwName'))]", //change this
         "azErGwSubnetId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'),'/providers/Microsoft.Network/virtualNetworks/', variables('hubname'), '/subnets/GatewaySubnet')]",
         "azErGwPipId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'), '/providers/Microsoft.Network/publicIPAddresses/', variables('azErGwIpName'))]",
         "azFwSubnetId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'),'/providers/Microsoft.Network/virtualNetworks/', variables('hubname'), '/subnets/AzureFirewallSubnet')]",

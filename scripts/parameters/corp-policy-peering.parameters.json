@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "connectivitySubscriptionId": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "addresses": {
+            "value": "10.200.0.0/16" // TODO: Fill in parameter value
+        },
+        "topLevelManagementGroupPrefix": {
+            "value": "" // TODO: Fill in parameter value
+        }
+    }
+}
